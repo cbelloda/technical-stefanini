@@ -13,8 +13,8 @@ import com.belloda.entity.BranchOffice;
 public class BranchOfficeService {
     private final BranchOfficeDao branchOfficeDao; 
 
-    public BranchOfficeService(){
-        branchOfficeDao = new BranchOfficeDao();
+    public BranchOfficeService(BranchOfficeDao branchOfficeDao){
+        this.branchOfficeDao = branchOfficeDao;
     }
 
     public ResponseMaintenance save(int bank,BranchOfficeDto branchOfficeDto){

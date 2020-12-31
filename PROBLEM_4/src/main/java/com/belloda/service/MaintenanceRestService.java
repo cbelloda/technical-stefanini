@@ -20,10 +20,11 @@ public class MaintenanceRestService {
     private BranchOfficeService branchOfficeService;
     private PaymentOrderService paymentOrderService;
 
-    public MaintenanceRestService() {
-        bankService = new BankService();
-        branchOfficeService = new BranchOfficeService();
-        paymentOrderService = new PaymentOrderService();
+    
+    public MaintenanceRestService(BankService bankService, BranchOfficeService branchOfficeService, PaymentOrderService paymentOrderService) {
+        this.bankService = bankService;
+        this.branchOfficeService = branchOfficeService;
+        this.paymentOrderService = paymentOrderService;
     }
 
     @POST

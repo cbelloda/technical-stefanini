@@ -20,9 +20,9 @@ public class PaymentsRestService {
     BranchOfficeService branchOfficeService;
     PaymentOrderService paymentOrderService;
 
-    public PaymentsRestService(){
-        branchOfficeService=new BranchOfficeService();
-        paymentOrderService=new PaymentOrderService();
+    public PaymentsRestService(BranchOfficeService branchOfficeService,PaymentOrderService paymentOrderService){
+        this.branchOfficeService=branchOfficeService;
+        this.paymentOrderService=paymentOrderService;
     }
 
     @GET

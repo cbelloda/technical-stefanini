@@ -11,8 +11,8 @@ import com.belloda.entity.Bank;
 
 public class BankService {
     private final BankDao bankDao;
-    public BankService(){
-        bankDao = new BankDao();
+    public BankService(BankDao bankDao){
+        this.bankDao=bankDao;
     }
     public boolean invalidBank(int id){
         return bankDao.findById(id)==null;

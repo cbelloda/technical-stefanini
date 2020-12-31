@@ -1,17 +1,22 @@
 package com.belloda;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
+import javax.xml.ws.Endpoint;
 
 import com.belloda.dao.BankDao;
-import com.belloda.entity.Bank;
+import com.belloda.dao.BranchOfficeDao;
+import com.belloda.dao.PaymentOrderDao;
+import com.belloda.service.BankService;
+import com.belloda.service.BranchOfficeService;
 import com.belloda.service.MaintenanceRestService;
+import com.belloda.service.PaymentOrderService;
 import com.belloda.service.PaymentsRestService;
+import com.belloda.soap.DefaultBranchOfficeServiceSoap;
 
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
@@ -19,17 +24,17 @@ import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
 import org.apache.cxf.jaxrs.provider.JAXBElementProvider;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
-public class RestfulServer {
+public class AppServer {
     public static void main(String args[]) throws Exception {
 
 
-      
-        Bank bbva= new Bank("name", "address", new Date());
-        boolean saveBankresult=new BankDao().save(bbva);
+        BankDao bankDao= new BankDao();
+        BranchOfficeDao branchOfficeDao = new BranchOfficeDao();
+        PaymentOrderDao paymentOrderDao = new PaymentOrderDao();
 
-        System.out.println("el banco ha sido grabado "+saveBankresult);
-        BankDao bankDao=new BankDao();
-        bankDao.getAll();
+        BankService bankService= new BankService(bankDao);
+        BranchOfficeService branchOfficeService = new BranchOfficeService(branchOfficeDao);
+        PaymentOrderService paymentOrderService = new PaymentOrderService(paymentOrderDao);
 
         JAXRSServerFactoryBean factoryBean = new JAXRSServerFactoryBean();
 
@@ -44,10 +49,15 @@ public class RestfulServer {
 
         factoryBean.setResourceClasses(MaintenanceRestService.class);
         factoryBean.setResourceClasses(PaymentsRestService.class);
-        factoryBean.setResourceProvider(new SingletonResourceProvider(new MaintenanceRestService()));
-        factoryBean.setResourceProvider(new SingletonResourceProvider(new PaymentsRestService()));
+        factoryBean.setResourceProvider(new SingletonResourceProvider(new MaintenanceRestService(bankService, branchOfficeService, paymentOrderService)));
+        factoryBean.setResourceProvider(new SingletonResourceProvider(new PaymentsRestService(branchOfficeService,paymentOrderService)));
         factoryBean.setAddress("http://localhost:8080/");
         Server server = factoryBean.create();
+
+
+        DefaultBranchOfficeServiceSoap implementor = new DefaultBranchOfficeServiceSoap();
+        String address = "http://localhost:8081/branchesOffice";
+        Endpoint.publish(address, implementor);
 
         System.out.println("Server Starting");
         Thread.sleep(1000 * 1000);

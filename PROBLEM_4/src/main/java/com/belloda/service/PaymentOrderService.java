@@ -11,15 +11,14 @@ import com.belloda.dto.PaymentOrderDto;
 import com.belloda.dto.ResponseError;
 import com.belloda.dto.ResponseMaintenance;
 import com.belloda.dto.ResponseOk;
-import com.belloda.entity.BranchOffice;
 import com.belloda.entity.PaymentOrder;
 
 public class PaymentOrderService {
 
     private final PaymentOrderDao paymentOrderDao;
 
-    public PaymentOrderService(){
-        paymentOrderDao= new PaymentOrderDao();
+    public PaymentOrderService(PaymentOrderDao paymentOrderDao){
+        this.paymentOrderDao= paymentOrderDao;
     }
 
     public ResponseMaintenance save(int branchOffice,PaymentOrderDto paymentOrderDto){
